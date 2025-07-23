@@ -160,7 +160,7 @@
         },
         "superdesign.kimiApiKey": {
           "type": "string",
-          "description": "Kimi API key for custom agent",
+          "description": "Moonshot API key for Kimi integration",
           "scope": "application"
         },
         "superdesign.aiModelProvider": {

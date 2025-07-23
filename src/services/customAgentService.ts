@@ -120,9 +120,14 @@ export class CustomAgentService implements AgentService {
                 return openrouter.chat(openrouterModel);
 
             case 'kimi':
-                const kimiKey = config.get<string>('kimiApiKey') || process.env.KIMI_API_KEY;
+                const kimiKey =
+                    config.get<string>('kimiApiKey') ||
+                    process.env.MOONSHOT_API_KEY ||
+                    process.env.KIMI_API_KEY;
                 if (!kimiKey) {
-                    throw new Error('Kimi API key not configured. Please run "Configure Kimi Api Key" command or set the KIMI_API_KEY environment variable.');
+                    throw new Error(
+                        'Kimi API key not configured. Please run "Configure Kimi Api Key" command or set the MOONSHOT_API_KEY environment variable.'
+                    );
                 }
 
                 this.outputChannel.appendLine(`Kimi API key found: ${kimiKey.substring(0, 7)}...`);
@@ -132,7 +137,7 @@ export class CustomAgentService implements AgentService {
 
                 const kimi = createOpenAI({
                     apiKey: kimiKey,
-                    baseURL: 'https://kimi-k2.ai/api/v1'
+                    baseURL: 'https://api.moonshot.cn/v1'
                 });
 
                 const kimiModel = specificModel || 'kimi-k2';

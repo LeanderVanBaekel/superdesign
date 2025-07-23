@@ -1549,7 +1549,7 @@ async function configureKimiApiKey() {
 
         const input = await vscode.window.showInputBox({
                 title: 'Configure Kimi API Key',
-                prompt: 'Enter your Kimi API key (see https://kimi-k2.ai/)',
+                prompt: 'Enter your Moonshot API key (see https://api.moonshot.cn/)',
                 value: currentKey ? '••••••••••••••••' : '',
                 password: true,
                 placeHolder: 'sk-...',
