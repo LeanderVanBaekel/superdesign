@@ -120,12 +120,15 @@ export class CustomAgentService implements AgentService {
                 return openrouter.chat(openrouterModel);
 
             case 'kimi':
-                const kimiKey = config.get<string>('kimiApiKey');
+                const kimiKey = config.get<string>('kimiApiKey') || process.env.KIMI_API_KEY;
                 if (!kimiKey) {
-                    throw new Error('Kimi API key not configured. Please run "Configure Kimi Api Key" command.');
+                    throw new Error('Kimi API key not configured. Please run "Configure Kimi Api Key" command or set the KIMI_API_KEY environment variable.');
                 }
 
                 this.outputChannel.appendLine(`Kimi API key found: ${kimiKey.substring(0, 7)}...`);
+
+                // Also expose key via OPENAI_API_KEY for libraries that rely on the env variable
+                process.env.OPENAI_API_KEY = kimiKey;
 
                 const kimi = createOpenAI({
                     apiKey: kimiKey,
