@@ -129,10 +129,10 @@ export class CustomAgentService implements AgentService {
 
                 const kimi = createOpenAI({
                     apiKey: kimiKey,
-                    baseURL: 'https://api.kimi.ai/v1'
+                    baseURL: 'https://kimi-k2.ai/api/v1'
                 });
 
-                const kimiModel = specificModel || 'kimi-v2';
+                const kimiModel = specificModel || 'kimi-k2';
                 this.outputChannel.appendLine(`Using Kimi model: ${kimiModel}`);
                 return kimi(kimiModel);
                 
@@ -200,7 +200,7 @@ export class CustomAgentService implements AgentService {
                     modelName = 'anthropic/claude-3-7-sonnet-20250219';
                     break;
                 case 'kimi':
-                    modelName = 'kimi-v2';
+                    modelName = 'kimi-k2';
                     break;
                 case 'anthropic':
                 default:

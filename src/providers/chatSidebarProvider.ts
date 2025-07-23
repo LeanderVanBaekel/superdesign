@@ -110,7 +110,7 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
                 defaultModel = 'anthropic/claude-3-7-sonnet-20250219';
                 break;
             case 'kimi':
-                defaultModel = 'kimi-v2';
+                defaultModel = 'kimi-k2';
                 break;
             case 'anthropic':
             default:
@@ -206,7 +206,7 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
             'claude-3-sonnet-20240229': 'Claude 3 Sonnet',
             'claude-3-haiku-20240307': 'Claude 3 Haiku',
             // Kimi models
-            'kimi-v2': 'Kimi V2',
+            'kimi-k2': 'Kimi K2',
             // OpenRouter - Google models
             'google/gemini-2.5-pro': 'Gemini 2.5 Pro',
             'google/gemini-2.5-flash': 'Gemini 2.5 Flash',
