@@ -109,6 +109,9 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
             case 'openrouter':
                 defaultModel = 'anthropic/claude-3-7-sonnet-20250219';
                 break;
+            case 'moonshot':
+                defaultModel = 'kimi-k2-0711-preview';
+                break;
             case 'anthropic':
             default:
                 defaultModel = 'claude-3-5-sonnet-20241022';
@@ -143,6 +146,11 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
                 apiKeyKey = 'anthropicApiKey';
                 configureCommand = 'superdesign.configureApiKey';
                 displayName = `Anthropic (${this.getModelDisplayName(model)})`;
+            } else if (model.startsWith('kimi-')) {
+                provider = 'moonshot';
+                apiKeyKey = 'moonshotApiKey';
+                configureCommand = 'superdesign.configureMoonshotApiKey';
+                displayName = `Kimi (${this.getModelDisplayName(model)})`;
             } else {
                 provider = 'openai';
                 apiKeyKey = 'openaiApiKey';
@@ -189,6 +197,7 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
             'gpt-4.1-nano': 'GPT-4.1 Nano',
             'gpt-4o': 'GPT-4o',
             'gpt-4o-mini': 'GPT-4o Mini',
+            'kimi-k2-0711-preview': 'Kimi K2',
             // Anthropic models
             'claude-4-opus-20250514': 'Claude 4 Opus',
             'claude-4-sonnet-20250514': 'Claude 4 Sonnet',

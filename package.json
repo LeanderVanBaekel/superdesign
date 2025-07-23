@@ -38,7 +38,8 @@
   ],
   "activationEvents": [
     "onCommand:superdesign.helloWorld",
-    "onView:superdesign.chatView"
+    "onView:superdesign.chatView",
+    "onCommand:superdesign.configureMoonshotApiKey"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -61,6 +62,11 @@
       {
         "command": "superdesign.configureOpenRouterApiKey",
         "title": "Configure OpenRouter API Key",
+        "category": "Superdesign"
+      },
+      {
+        "command": "superdesign.configureMoonshotApiKey",
+        "title": "Configure Moonshot API Key",
         "category": "Superdesign"
       },
       {
@@ -153,15 +159,21 @@
           "description": "OpenRouter API key for custom agent",
           "scope": "application"
         },
+        "superdesign.moonshotApiKey": {
+          "type": "string",
+          "description": "Moonshot (Kimi) API key for custom agent",
+          "scope": "application"
+        },
         "superdesign.aiModelProvider": {
           "type": "string",
           "enum": [
             "openai",
             "anthropic",
-            "openrouter"
+            "openrouter",
+            "moonshot"
           ],
           "default": "anthropic",
-          "description": "AI model provider for custom agent (OpenAI, Anthropic, or OpenRouter)",
+          "description": "AI model provider for custom agent (OpenAI, Anthropic, OpenRouter or Moonshot)",
           "scope": "application"
         },
         "superdesign.aiModel": {

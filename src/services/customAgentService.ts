@@ -94,6 +94,8 @@ export class CustomAgentService implements AgentService {
                 effectiveProvider = 'openrouter';
             } else if (specificModel.startsWith('claude-')) {
                 effectiveProvider = 'anthropic';
+            } else if (specificModel.startsWith('kimi-')) {
+                effectiveProvider = 'moonshot';
             } else {
                 effectiveProvider = 'openai';
             }
@@ -116,6 +118,23 @@ export class CustomAgentService implements AgentService {
                 const openrouterModel = specificModel || 'anthropic/claude-3-7-sonnet-20250219';
                 this.outputChannel.appendLine(`Using OpenRouter model: ${openrouterModel}`);
                 return openrouter.chat(openrouterModel);
+
+            case 'moonshot':
+                const moonshotKey = config.get<string>('moonshotApiKey');
+                if (!moonshotKey) {
+                    throw new Error('Moonshot API key not configured. Please run "Configure Moonshot API Key" command.');
+                }
+
+                this.outputChannel.appendLine(`Moonshot API key found: ${moonshotKey.substring(0, 12)}...`);
+
+                const moonshot = createOpenAI({
+                    apiKey: moonshotKey,
+                    baseURL: 'https://api.moonshot.ai/v1'
+                });
+
+                const moonshotModel = specificModel || 'kimi-k2-0711-preview';
+                this.outputChannel.appendLine(`Using Moonshot model: ${moonshotModel}`);
+                return moonshot(moonshotModel);
                 
             case 'anthropic':
                 const anthropicKey = config.get<string>('anthropicApiKey');
@@ -179,6 +198,9 @@ export class CustomAgentService implements AgentService {
                     break;
                 case 'openrouter':
                     modelName = 'anthropic/claude-3-7-sonnet-20250219';
+                    break;
+                case 'moonshot':
+                    modelName = 'kimi-k2-0711-preview';
                     break;
                 case 'anthropic':
                 default:
@@ -895,6 +917,8 @@ I've created the html design, please reveiw and let me know if you need any chan
                 effectiveProvider = 'openrouter';
             } else if (specificModel.startsWith('claude-')) {
                 effectiveProvider = 'anthropic';
+            } else if (specificModel.startsWith('kimi-')) {
+                effectiveProvider = 'moonshot';
             } else {
                 effectiveProvider = 'openai';
             }
@@ -905,6 +929,8 @@ I've created the html design, please reveiw and let me know if you need any chan
                 return !!config.get<string>('openrouterApiKey');
             case 'anthropic':
                 return !!config.get<string>('anthropicApiKey');
+            case 'moonshot':
+                return !!config.get<string>('moonshotApiKey');
             case 'openai':
             default:
                 return !!config.get<string>('openaiApiKey');

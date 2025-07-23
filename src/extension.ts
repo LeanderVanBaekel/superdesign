@@ -1270,9 +1270,13 @@ export function activate(context: vscode.ExtensionContext) {
 		await configureOpenAIApiKey();
 	});
 
-	const configureOpenRouterApiKeyDisposable = vscode.commands.registerCommand('superdesign.configureOpenRouterApiKey', async () => {
-		await configureOpenRouterApiKey();
-	});
+        const configureOpenRouterApiKeyDisposable = vscode.commands.registerCommand('superdesign.configureOpenRouterApiKey', async () => {
+                await configureOpenRouterApiKey();
+        });
+
+        const configureMoonshotApiKeyDisposable = vscode.commands.registerCommand('superdesign.configureMoonshotApiKey', async () => {
+                await configureMoonshotApiKey();
+        });
 
 
 	// Create the chat sidebar provider
@@ -1390,9 +1394,10 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		helloWorldDisposable, 
 		configureApiKeyDisposable,
-		configureOpenAIApiKeyDisposable,
-		configureOpenRouterApiKeyDisposable,
-		sidebarDisposable,
+                configureOpenAIApiKeyDisposable,
+                configureOpenRouterApiKeyDisposable,
+                configureMoonshotApiKeyDisposable,
+                sidebarDisposable,
 		showSidebarDisposable,
 		openCanvasDisposable,
 		clearChatDisposable,
@@ -1536,6 +1541,48 @@ async function configureOpenRouterApiKey() {
 			vscode.window.showWarningMessage('No API key was set');
 		}
 	}
+}
+
+// Function to configure Moonshot API key
+async function configureMoonshotApiKey() {
+        const currentKey = vscode.workspace.getConfiguration('superdesign').get<string>('moonshotApiKey');
+
+        const input = await vscode.window.showInputBox({
+                title: 'Configure Moonshot API Key',
+                prompt: 'Enter your Moonshot API key (get one from https://platform.moonshot.ai/)',
+                value: currentKey ? '••••••••••••••••' : '',
+                password: true,
+                placeHolder: 'sk-...',
+                validateInput: (value) => {
+                        if (!value || value.trim().length === 0) {
+                                return 'API key cannot be empty';
+                        }
+                        if (value === '••••••••••••••••') {
+                                return null; // User didn't change the masked value, that's OK
+                        }
+                        return null;
+                }
+        });
+
+        if (input !== undefined) {
+                // Only update if user didn't just keep the masked value
+                if (input !== '••••••••••••••••') {
+                        try {
+                                await vscode.workspace.getConfiguration('superdesign').update(
+                                        'moonshotApiKey',
+                                        input.trim(),
+                                        vscode.ConfigurationTarget.Global
+                                );
+                                vscode.window.showInformationMessage('✅ Moonshot API key configured successfully!');
+                        } catch (error) {
+                                vscode.window.showErrorMessage(`Failed to save API key: ${error}`);
+                        }
+                } else if (currentKey) {
+                        vscode.window.showInformationMessage('API key unchanged (already configured)');
+                } else {
+                        vscode.window.showWarningMessage('No API key was set');
+                }
+        }
 }
 
 class SuperdesignCanvasPanel {
