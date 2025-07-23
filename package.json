@@ -64,6 +64,11 @@
         "category": "Superdesign"
       },
       {
+        "command": "superdesign.configureKimiApiKey",
+        "title": "Configure Kimi API Key",
+        "category": "Superdesign"
+      },
+      {
         "command": "superdesign.showChatSidebar",
         "title": "Show Chat Sidebar",
         "category": "Superdesign"
@@ -153,15 +158,21 @@
           "description": "OpenRouter API key for custom agent",
           "scope": "application"
         },
+        "superdesign.kimiApiKey": {
+          "type": "string",
+          "description": "Kimi API key for custom agent",
+          "scope": "application"
+        },
         "superdesign.aiModelProvider": {
           "type": "string",
           "enum": [
             "openai",
             "anthropic",
-            "openrouter"
+            "openrouter",
+            "kimi"
           ],
           "default": "anthropic",
-          "description": "AI model provider for custom agent (OpenAI, Anthropic, or OpenRouter)",
+          "description": "AI model provider for custom agent (OpenAI, Anthropic, OpenRouter or Kimi)",
           "scope": "application"
         },
         "superdesign.aiModel": {

@@ -94,6 +94,8 @@ export class CustomAgentService implements AgentService {
                 effectiveProvider = 'openrouter';
             } else if (specificModel.startsWith('claude-')) {
                 effectiveProvider = 'anthropic';
+            } else if (specificModel.startsWith('kimi-')) {
+                effectiveProvider = 'kimi';
             } else {
                 effectiveProvider = 'openai';
             }
@@ -116,6 +118,23 @@ export class CustomAgentService implements AgentService {
                 const openrouterModel = specificModel || 'anthropic/claude-3-7-sonnet-20250219';
                 this.outputChannel.appendLine(`Using OpenRouter model: ${openrouterModel}`);
                 return openrouter.chat(openrouterModel);
+
+            case 'kimi':
+                const kimiKey = config.get<string>('kimiApiKey');
+                if (!kimiKey) {
+                    throw new Error('Kimi API key not configured. Please run "Configure Kimi Api Key" command.');
+                }
+
+                this.outputChannel.appendLine(`Kimi API key found: ${kimiKey.substring(0, 7)}...`);
+
+                const kimi = createOpenAI({
+                    apiKey: kimiKey,
+                    baseURL: 'https://api.kimi.ai/v1'
+                });
+
+                const kimiModel = specificModel || 'kimi-v2';
+                this.outputChannel.appendLine(`Using Kimi model: ${kimiModel}`);
+                return kimi(kimiModel);
                 
             case 'anthropic':
                 const anthropicKey = config.get<string>('anthropicApiKey');
@@ -179,6 +198,9 @@ export class CustomAgentService implements AgentService {
                     break;
                 case 'openrouter':
                     modelName = 'anthropic/claude-3-7-sonnet-20250219';
+                    break;
+                case 'kimi':
+                    modelName = 'kimi-v2';
                     break;
                 case 'anthropic':
                 default:
@@ -895,6 +917,8 @@ I've created the html design, please reveiw and let me know if you need any chan
                 effectiveProvider = 'openrouter';
             } else if (specificModel.startsWith('claude-')) {
                 effectiveProvider = 'anthropic';
+            } else if (specificModel.startsWith('kimi-')) {
+                effectiveProvider = 'kimi';
             } else {
                 effectiveProvider = 'openai';
             }
@@ -905,6 +929,8 @@ I've created the html design, please reveiw and let me know if you need any chan
                 return !!config.get<string>('openrouterApiKey');
             case 'anthropic':
                 return !!config.get<string>('anthropicApiKey');
+            case 'kimi':
+                return !!config.get<string>('kimiApiKey');
             case 'openai':
             default:
                 return !!config.get<string>('openaiApiKey');

@@ -1270,9 +1270,13 @@ export function activate(context: vscode.ExtensionContext) {
 		await configureOpenAIApiKey();
 	});
 
-	const configureOpenRouterApiKeyDisposable = vscode.commands.registerCommand('superdesign.configureOpenRouterApiKey', async () => {
-		await configureOpenRouterApiKey();
-	});
+        const configureOpenRouterApiKeyDisposable = vscode.commands.registerCommand('superdesign.configureOpenRouterApiKey', async () => {
+                await configureOpenRouterApiKey();
+        });
+
+        const configureKimiApiKeyDisposable = vscode.commands.registerCommand('superdesign.configureKimiApiKey', async () => {
+                await configureKimiApiKey();
+        });
 
 
 	// Create the chat sidebar provider
@@ -1389,10 +1393,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		helloWorldDisposable, 
-		configureApiKeyDisposable,
-		configureOpenAIApiKeyDisposable,
-		configureOpenRouterApiKeyDisposable,
-		sidebarDisposable,
+                configureApiKeyDisposable,
+                configureOpenAIApiKeyDisposable,
+                configureOpenRouterApiKeyDisposable,
+                configureKimiApiKeyDisposable,
+                sidebarDisposable,
 		showSidebarDisposable,
 		openCanvasDisposable,
 		clearChatDisposable,
@@ -1536,6 +1541,47 @@ async function configureOpenRouterApiKey() {
 			vscode.window.showWarningMessage('No API key was set');
 		}
 	}
+}
+
+// Function to configure Kimi API key
+async function configureKimiApiKey() {
+        const currentKey = vscode.workspace.getConfiguration('superdesign').get<string>('kimiApiKey');
+
+        const input = await vscode.window.showInputBox({
+                title: 'Configure Kimi API Key',
+                prompt: 'Enter your Kimi API key (see https://kimi-k2.ai/)',
+                value: currentKey ? '••••••••••••••••' : '',
+                password: true,
+                placeHolder: 'sk-...',
+                validateInput: (value) => {
+                        if (!value || value.trim().length === 0) {
+                                return 'API key cannot be empty';
+                        }
+                        if (value === '••••••••••••••••') {
+                                return null;
+                        }
+                        return null;
+                }
+        });
+
+        if (input !== undefined) {
+                if (input !== '••••••••••••••••') {
+                        try {
+                                await vscode.workspace.getConfiguration('superdesign').update(
+                                        'kimiApiKey',
+                                        input.trim(),
+                                        vscode.ConfigurationTarget.Global
+                                );
+                                vscode.window.showInformationMessage('✅ Kimi API key configured successfully!');
+                        } catch (error) {
+                                vscode.window.showErrorMessage(`Failed to save API key: ${error}`);
+                        }
+                } else if (currentKey) {
+                        vscode.window.showInformationMessage('API key unchanged (already configured)');
+                } else {
+                        vscode.window.showWarningMessage('No API key was set');
+                }
+        }
 }
 
 class SuperdesignCanvasPanel {

@@ -109,6 +109,9 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
             case 'openrouter':
                 defaultModel = 'anthropic/claude-3-7-sonnet-20250219';
                 break;
+            case 'kimi':
+                defaultModel = 'kimi-v2';
+                break;
             case 'anthropic':
             default:
                 defaultModel = 'claude-3-5-sonnet-20241022';
@@ -143,6 +146,11 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
                 apiKeyKey = 'anthropicApiKey';
                 configureCommand = 'superdesign.configureApiKey';
                 displayName = `Anthropic (${this.getModelDisplayName(model)})`;
+            } else if (model.startsWith('kimi-')) {
+                provider = 'kimi';
+                apiKeyKey = 'kimiApiKey';
+                configureCommand = 'superdesign.configureKimiApiKey';
+                displayName = `Kimi (${this.getModelDisplayName(model)})`;
             } else {
                 provider = 'openai';
                 apiKeyKey = 'openaiApiKey';
@@ -197,6 +205,8 @@ export class ChatSidebarProvider implements vscode.WebviewViewProvider {
             'claude-3-opus-20240229': 'Claude 3 Opus',
             'claude-3-sonnet-20240229': 'Claude 3 Sonnet',
             'claude-3-haiku-20240307': 'Claude 3 Haiku',
+            // Kimi models
+            'kimi-v2': 'Kimi V2',
             // OpenRouter - Google models
             'google/gemini-2.5-pro': 'Gemini 2.5 Pro',
             'google/gemini-2.5-flash': 'Gemini 2.5 Flash',

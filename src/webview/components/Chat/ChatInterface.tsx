@@ -57,6 +57,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ layout, vscode }) => {
                     case 'openrouter':
                         fallbackModel = 'anthropic/claude-3-7-sonnet-20250219';
                         break;
+                    case 'kimi':
+                        fallbackModel = 'kimi-v2';
+                        break;
                     case 'anthropic':
                     default:
                         fallbackModel = 'claude-3-5-sonnet-20241022';
